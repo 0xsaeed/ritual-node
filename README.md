@@ -174,12 +174,12 @@ forge install --no-commit foundry-rs/forge-std
 forge install --no-commit ritual-net/infernet-sdk
 ```
 
+Pay attention to log of following command and look for `Deployed SaysHello`. Copy it's address, you need it for next step.
+
 ```console
 cd $HOME/infernet-container-starter/
 project=hello-world make deploy-contracts
 ```
-
-Copy  `Deployed SaysHello` address and enter it here
 
 ```console
 read -p "Enter your Deployed SaysHello address: " SAY_GM
@@ -193,6 +193,10 @@ sed -i "s/SaysGM saysGm = new SaysGM(.*);/SaysGM saysGm = new SaysGM($SAY_GM);/"
 cd $HOME/infernet-container-starter/
 make call-contract project=hello-world
 ```
+
+# 5 - Done
+
+### You can check status of your node on [https://basescan.org/](https://basescan.org/) by entering you wallet address.
 
 List all containers
 
