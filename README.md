@@ -9,6 +9,8 @@
 
 **Please use this code responsibly and at your own risk.**
 
+*This document is written for v1.0.0 of Ritualnet container*
+
 ### Official Links
 
 * [Official Document](https://docs.ritual.net/infernet/node/introduction)
@@ -19,7 +21,7 @@
 
 | Ram | cpu     | disk                      |
 | :-------- | :------- | :-------------------------------- |
-| `16GB`      | `4 modern vCPU cores ` | `500GB IOPS-optimized SSD ` |
+| `16GB`      | `4 modern vCPU cores` | `500GB IOPS-optimized SSD` |
 > It's the recommended specification you can try with lower configuration.
 
 You also need a wallet with a little amount of ETH on Basechain(<10$)
@@ -58,7 +60,7 @@ Now check docker is installed or not by following command
 docker -v
 ```
 
-*if you get version of docker it means it's alreary installed. So you can skip part 3 and jump to part [4](#4---install-ritual)*
+*If you get version of docker it means it's alreary installed. So you can skip next part and jump to [Install Ritual](#4---install-ritual)*
 
 # 3 - Install Docker
 
@@ -94,52 +96,57 @@ sudo docker run hello-world
 # 4 - Install Ritual
 
 Create a screen session
+
 ```console
 cd $HOME
 screen -S ritual
 ```
 
 In new screen clone the repo
+
 ```console
 git clone https://github.com/ritual-net/infernet-container-starter
 cd infernet-container-starter
 project=hello-world make deploy-container
 ```
+
 ```console
 export REGISTER_NODE="0x3B1554f346DFe5c482Bb4BA31b880c1C18412170"
 export BASE_RPC_URL="https://base-rpc.publicnode.com"
 ```
+
 Enter private key of your wallet
+
 ```console
 read -p "Enter your Private key: " NEW_PRIVATE_KEY
 
 ```
+
 Change private key, register node and rpc url in config files:
+
 ```console
 # Replace rpc_url
 sed -i "s|\"rpc_url\": \".*\"|\"rpc_url\": \"$BASE_RPC_URL\"|" ~/infernet-container-starter/deploy/config.json
-sed -i "s|\"rpc_url\": \".*\"|\"rpc_url\": \"$BASE_RPC_URL\"|" ~/infernet-container-starter/projects/hello-world/contracts/Makefile
-sed -i "s|\"rpc_url\": \".*\"|\"rpc_url\": \"$BASE_RPC_URL\"|" ~/infernet-container-starter/projects/hello-world/container/config.json
-sed -i "s|\"rpc_url\": \".*\"|\"rpc_url\": \"$BASE_RPC_URL\"|" ~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.s.sol
+sed -i "s|RPC_URL := .*|RPC_URL := ${BASE_RPC_URL}|" ~/infernet-container-starter/projects/hello-world/contracts/Makefile
 
 # Replace registry_address
-sed -i "s/\"registry_address\": \".*\"/\"registry_address\": \"$REGISTER_NODE\"/" ~/infernet-container-starter/projects/hello-world/contracts/Makefile
 sed -i "s/\"registry_address\": \".*\"/\"registry_address\": \"$REGISTER_NODE\"/" ~/infernet-container-starter/deploy/config.json
-sed -i "s/\"registry_address\": \".*\"/\"registry_address\": \"$REGISTER_NODE\"/" ~/infernet-container-starter/projects/hello-world/container/config.json
-sed -i "s/\"registry_address\": \".*\"/\"registry_address\": \"$REGISTER_NODE\"/" ~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.s.sol
+sed -i "s|address registry = .*;|address registry = ${REGISTER_NODE};|" ~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.s.sol
+sed -i "s|\"registry_address\": \".*\"|\"registry_address\": \"${REGISTER_NODE}\"|" ~/infernet-container-starter/projects/hello-world/container/config.json
 
 # Replace private_key
 sed -i "s/\"private_key\": \".*\"/\"private_key\": \"$NEW_PRIVATE_KEY\"/" ~/infernet-container-starter/deploy/config.json
-sed -i "s/\"private_key\": \".*\"/\"private_key\": \"$NEW_PRIVATE_KEY\"/" ~/infernet-container-starter/projects/hello-world/contracts/Makefile
-sed -i "s/\"private_key\": \".*\"/\"private_key\": \"$NEW_PRIVATE_KEY\"/" ~/infernet-container-starter/projects/hello-world/container/config.json
-sed -i "s/\"private_key\": \".*\"/\"private_key\": \"$NEW_PRIVATE_KEY\"/" ~/infernet-container-starter/projects/hello-world/contracts/script/Deploy.s.sol
+sed -i "s|sender := .*|sender := ${NEW_PRIVATE_KEY}|" ~/infernet-container-starter/projects/hello-world/contracts/Makefile
+sed -i "s|\"private_key\": \".*\"|\"private_key\": \"${NEW_PRIVATE_KEY}\"|" ~/infernet-container-starter/projects/hello-world/container/config.json
 
 ```
+
 ```console
 cd deploy
 docker compose down
 docker compose up -d
 ```
+
 ```console
 docker restart infernet-node  &&\
 docker restart hello-world &&\
@@ -147,7 +154,9 @@ docker restart deploy-redis-1 &&\
 docker restart infernet-anvil &&\
 docker restart deploy-fluentbit-1
 ```
-Install Fundry
+
+Install Foundry
+
 ```console
 cd $HOME
 mkdir foundry
@@ -156,6 +165,7 @@ curl -L https://foundry.paradigm.xyz | bash
 source ~/.bashrc
 foundryup
 ```
+
 ```console
 cd $HOME/infernet-container-starter/projects/hello-world/contracts/lib/
 rm -r forge-std
@@ -168,7 +178,9 @@ forge install --no-commit ritual-net/infernet-sdk
 cd $HOME/infernet-container-starter/
 project=hello-world make deploy-contracts
 ```
+
 Copy  `Deployed SaysHello` address and enter it here
+
 ```console
 read -p "Enter your Deployed SaysHello address: " SAY_GM
 ```
@@ -181,11 +193,15 @@ sed -i "s/SaysGM saysGm = new SaysGM(.*);/SaysGM saysGm = new SaysGM($SAY_GM);/"
 cd $HOME/infernet-container-starter/
 make call-contract project=hello-world
 ```
+
 List all containers
+
 ```console
 docker ps -a
 ```
+
 Get logs of these containers
+
 ```console
 docker logs infernet-node
 ```
