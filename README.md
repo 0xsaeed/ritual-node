@@ -109,6 +109,8 @@ git clone https://github.com/ritual-net/infernet-container-starter
 cd infernet-container-starter
 project=hello-world make deploy-container
 ```
+`Ctrl+c`
+
 
 ```console
 export REGISTER_NODE="0x3B1554f346DFe5c482Bb4BA31b880c1C18412170"
