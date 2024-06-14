@@ -75,10 +75,10 @@ Install
 ```console
 # Add Docker's official GPG key:
 sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg 
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-# Add the repository to Apt sources:
+# Add the repository to Apt sources: 
 echo  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null 
 sudo apt update
 # Install composer packages
@@ -186,7 +186,7 @@ read -p "Enter your Deployed SaysHello address: " SAY_GM
 ```
 
 ```console
-sed -i "s/SaysGM saysGm = new SaysGM(.*);/SaysGM saysGm = new SaysGM($SAY_GM);/" ~/infernet-container-starter/projects/hello-world/contracts/script/CallContract.s.sol
+sed -i "s/SaysGM saysGm = new SaysGM(.*);/SaysGM saysGm = new SaysGM(${SAY_GM});/" ~/infernet-container-starter/projects/hello-world/contracts/script/CallContract.s.sol
 ```
 
 ```console
