@@ -188,7 +188,7 @@ read -p "Enter your Deployed SaysHello address: " SAY_GM
 ```
 
 ```console
-sed -i 's/0x13D69Cf7d6CE4218F646B759Dcf334D82c023d8e/'"$SAY_GM"'/g' ~/infernet-container-starter/projects/hello-world/contracts/script/CallContract.s.sol
+sed -i 's/SaysGM([^)]*)/SaysGM('"$SAY_GM"')/g' ~/infernet-container-starter/projects/hello-world/contracts/script/CallContract.s.sol
 ```
 
 ```console
